@@ -85,12 +85,17 @@ export default function ProfilePage() {
             </div>
 
             {/* Follow Button */}
-            <Button
-              className="w-full mb-4"
-              onClick={() => setIsFollowing(!isFollowing)}
-            >
-              {isFollowing ? 'Following' : 'Follow'}
-            </Button>
+            <div className="space-y-2">
+              <Button
+                className="w-full"
+                onClick={() => setIsFollowing(!isFollowing)}
+              >
+                {isFollowing ? 'Following' : 'Follow'}
+              </Button>
+              <Button variant="outline" className="w-full" asChild>
+                <Link href={`/mobile/profile/${user.id}`}>View Posts</Link>
+              </Button>
+            </div>
           </div>
         </div>
       </div>

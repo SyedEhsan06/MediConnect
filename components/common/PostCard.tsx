@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { Heart, MessageCircle, Share2, Bookmark } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -8,6 +9,7 @@ import { Card } from '@/components/ui/card';
 
 interface PostCardProps {
   id: string;
+  href?: string;
   author: {
     id: string;
     name: string;
@@ -44,6 +46,7 @@ interface PostCardProps {
 
 export function PostCard({
   id,
+  href,
   author,
   type,
   title,
@@ -77,13 +80,20 @@ export function PostCard({
     <Card className="p-4 hover:shadow-md transition-shadow border-0 bg-card">
       {/* Header */}
       <div className="flex items-start gap-3 mb-3">
-        <Avatar className="h-10 w-10">
-          <AvatarImage src={author.avatar} alt={author.name} />
-          <AvatarFallback>{author.name[0]}</AvatarFallback>
-        </Avatar>
+        <Link href={`/mobile/profile/${author.id}`} className="shrink-0">
+          <Avatar className="h-10 w-10">
+            <AvatarImage src={author.avatar} alt={author.name} />
+            <AvatarFallback>{author.name[0]}</AvatarFallback>
+          </Avatar>
+        </Link>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="font-semibold text-sm text-foreground">{author.name}</span>
+            <Link
+              href={`/mobile/profile/${author.id}`}
+              className="font-semibold text-sm text-foreground hover:text-accent transition-colors"
+            >
+              {author.name}
+            </Link>
             {author.verified && (
               <svg className="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M6.267 3.455a3.066 3.066 0 001.745-.723p.5.5 0 00.577.577c.355.689.863 1.304 1.457 1.798m-5.779 7.178a3 3 0 01-.567-3.539m1.378 6.917a6 6 0 01-.175-6.987m0 0a6 6 0 016.987.175m0 0a3 3 0 00.567 3.539" />
@@ -104,7 +114,16 @@ export function PostCard({
 
       {/* Content */}
       <div className="mb-4">
-        <h3 className="font-semibold text-sm mb-2 text-foreground">{title}</h3>
+        {href ? (
+          <Link
+            href={href}
+            className="font-semibold text-sm mb-2 text-foreground block hover:text-accent transition-colors"
+          >
+            {title}
+          </Link>
+        ) : (
+          <h3 className="font-semibold text-sm mb-2 text-foreground">{title}</h3>
+        )}
 
         {type === 'text' && content && (
           <p className="text-sm text-foreground leading-relaxed line-clamp-3">{content}</p>
@@ -207,14 +226,14 @@ export function PostCard({
         )}
 
         {type === 'course' && courseName && (
-          <div className="mt-3 p-3 bg-gradient-to-r from-accent/10 to-accent/5 rounded-lg border border-accent/30">
+          <div className="mt-3 p-3 bg-linear-to-r from-accent/10 to-accent/5 rounded-lg border border-accent/30">
             <div className="flex items-center gap-3">
               <div className="text-3xl">{courseImage}</div>
               <div className="flex-1">
                 <p className="font-semibold text-sm text-foreground">{courseName}</p>
                 <p className="text-xs text-muted-foreground">{content}</p>
               </div>
-              <Button size="sm" className="flex-shrink-0">Enroll</Button>
+              <Button size="sm" className="shrink-0">Enroll</Button>
             </div>
           </div>
         )}

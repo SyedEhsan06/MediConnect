@@ -8,9 +8,11 @@ import { Card } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { mockUsers, mockCommunities, mockPosts, mockCourses } from '@/lib/constants/mock-data';
+import { useLocalStorage } from '@/hooks/use-local-storage';
 import { Search, Clock, X, BookOpen } from 'lucide-react';
 
 export default function SearchPage() {
+  const [localPosts] = useLocalStorage<any[]>('mc_local_posts', []);
   const [query, setQuery] = useState('');
   const [recentSearches, setRecentSearches] = useState([
     'NEET PG',
@@ -19,6 +21,7 @@ export default function SearchPage() {
     'ECG Interpretation',
   ]);
 
+  const allPosts = [...localPosts, ...mockPosts];
   const results = {
     courses: mockCourses.filter(c =>
       c.title.toLowerCase().includes(query.toLowerCase()) ||
@@ -32,7 +35,7 @@ export default function SearchPage() {
       c.name.toLowerCase().includes(query.toLowerCase()) ||
       c.description.toLowerCase().includes(query.toLowerCase())
     ),
-    posts: mockPosts.filter(p =>
+    posts: allPosts.filter(p =>
       p.title.toLowerCase().includes(query.toLowerCase()) ||
       p.content?.toLowerCase().includes(query.toLowerCase())
     ),
@@ -140,7 +143,7 @@ export default function SearchPage() {
                       href={`/mobile/courses/${course.id}`}
                       className="flex items-center gap-3 p-3 rounded-lg bg-card border border-border hover:bg-muted transition-colors"
                     >
-                      <div className="text-2xl flex-shrink-0">{course.thumbnail}</div>
+                      <div className="text-2xl shrink-0">{course.thumbnail}</div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-foreground line-clamp-1">{course.title}</p>
                         <p className="text-xs text-muted-foreground">{course.instructor}</p>
@@ -149,7 +152,7 @@ export default function SearchPage() {
                           <span className="text-xs text-muted-foreground">({course.reviews})</span>
                         </div>
                       </div>
-                      <div className="text-xs font-semibold text-accent flex-shrink-0">
+                      <div className="text-xs font-semibold text-accent shrink-0">
                         {course.isPaid ? `₹${course.price}` : 'Free'}
                       </div>
                     </Link>
@@ -200,7 +203,7 @@ export default function SearchPage() {
                       className="flex items-center gap-3 p-3 rounded-lg bg-card border border-border hover:bg-muted transition-colors"
                     >
                       <div
-                        className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-semibold text-sm flex-shrink-0"
+                        className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-semibold text-sm shrink-0"
                         style={{ backgroundColor: community.banner }}
                       >
                         {community.name.slice(0, 2)}
@@ -225,19 +228,25 @@ export default function SearchPage() {
                 <h2 className="text-sm font-semibold text-foreground mb-3">Posts</h2>
                 <div className="space-y-2">
                   {results.posts.map(post => (
-                    <Card key={post.id} className="p-3 border-0 bg-card hover:bg-muted transition-colors cursor-pointer">
-                      <p className="text-sm font-medium text-foreground line-clamp-1">
-                        {post.title}
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                        {post.content || post.question}
-                      </p>
-                      {post.community && (
-                        <Badge variant="outline" className="text-xs mt-2">
-                          {post.community.name}
-                        </Badge>
-                      )}
-                    </Card>
+                    <Link
+                      key={post.id}
+                      href={`/mobile/posts/${post.id}`}
+                      className="block"
+                    >
+                      <Card className="p-3 border-0 bg-card hover:bg-muted transition-colors cursor-pointer">
+                        <p className="text-sm font-medium text-foreground line-clamp-1">
+                          {post.title}
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                          {post.content || post.question}
+                        </p>
+                        {post.community && (
+                          <Badge variant="outline" className="text-xs mt-2">
+                            {post.community.name}
+                          </Badge>
+                        )}
+                      </Card>
+                    </Link>
                   ))}
                 </div>
               </div>

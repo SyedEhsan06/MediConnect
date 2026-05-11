@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { mockCommunities, mockUsers } from '@/lib/constants/mock-data';
+import { useLocalStorage } from '@/hooks/use-local-storage';
 import { ArrowLeft, Image, Video, FileText, BarChart3 } from 'lucide-react';
 
 const POST_TYPES = [
@@ -15,20 +17,20 @@ const POST_TYPES = [
   { id: 'poll', label: 'Poll', icon: BarChart3, desc: 'Create a poll' },
 ];
 
-const COMMUNITIES = [
-  'NEET PG Preparation',
-  'Anatomy Masters',
-  'Cardiology Discussion',
-  'Pathology Learning',
-  'General Discussion',
-];
+const COMMUNITIES = mockCommunities.map((community) => ({
+  id: community.id,
+  name: community.name,
+}));
 
 export default function CreatePostPage() {
   const router = useRouter();
+  const [localPosts, setLocalPosts] = useLocalStorage<any[]>('mc_local_posts', []);
   const [postType, setPostType] = useState('text');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [selectedCommunity, setSelectedCommunity] = useState('General Discussion');
+  const [mediaUrl, setMediaUrl] = useState('');
+  const [pollOptionsInput, setPollOptionsInput] = useState('');
+  const [selectedCommunity, setSelectedCommunity] = useState(COMMUNITIES[0]?.id || '');
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState('');
 
@@ -48,6 +50,36 @@ export default function CreatePostPage() {
       alert('Please enter a title');
       return;
     }
+
+    const currentUser = mockUsers[1];
+    const community = COMMUNITIES.find((item) => item.id === selectedCommunity);
+    const pollOptions = pollOptionsInput
+      .split(',')
+      .map((option) => option.trim())
+      .filter(Boolean)
+      .map((option) => ({ text: option, votes: 0 }));
+
+    const newPost = {
+      id: `local-${Date.now()}`,
+      author: currentUser,
+      type: postType,
+      title,
+      content,
+      timestamp: 'Just now',
+      createdAt: new Date().toISOString(),
+      likes: 0,
+      comments: 0,
+      tags: tags.length ? tags : ['General'],
+      community: community ? { id: community.id, name: community.name } : undefined,
+      liked: false,
+      saved: false,
+      imageUrl: postType === 'image' ? mediaUrl : undefined,
+      videoUrl: postType === 'video' ? mediaUrl : undefined,
+      videoThumbnail: postType === 'video' ? mediaUrl : undefined,
+      pollOptions: postType === 'poll' ? pollOptions : undefined,
+    };
+
+    setLocalPosts([newPost, ...localPosts]);
     router.push('/mobile');
   };
 
@@ -106,8 +138,10 @@ export default function CreatePostPage() {
             onChange={(e) => setSelectedCommunity(e.target.value)}
             className="w-full border border-border rounded-lg px-3 py-2 bg-card text-foreground"
           >
-            {COMMUNITIES.map(c => (
-              <option key={c} value={c}>{c}</option>
+            {COMMUNITIES.map((community) => (
+              <option key={community.id} value={community.id}>
+                {community.name}
+              </option>
             ))}
           </select>
         </div>
@@ -142,7 +176,12 @@ export default function CreatePostPage() {
               placeholder="Add tags (e.g., Cardiology, NEET PG)"
               value={tagInput}
               onChange={(e) => setTagInput(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddTag())}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  handleAddTag();
+                }
+              }}
               className="border-border flex-1"
             />
             <Button variant="outline" onClick={handleAddTag}>Add</Button>
@@ -166,13 +205,27 @@ export default function CreatePostPage() {
         {/* Media Upload (for image/video) */}
         {(postType === 'image' || postType === 'video') && (
           <div>
-            <h2 className="text-sm font-semibold text-foreground mb-2">Upload {postType}</h2>
-            <div className="border-2 border-dashed border-border rounded-lg p-6 text-center cursor-pointer hover:border-accent hover:bg-accent/5 transition-colors">
-              <div className="text-muted-foreground">
-                <p className="font-medium">Click to upload or drag and drop</p>
-                <p className="text-xs mt-1">{postType === 'image' ? 'PNG, JPG, GIF up to 10MB' : 'MP4, WebM up to 100MB'}</p>
-              </div>
-            </div>
+            <h2 className="text-sm font-semibold text-foreground mb-2">
+              {postType === 'image' ? 'Image URL' : 'Video URL'}
+            </h2>
+            <Input
+              placeholder={postType === 'image' ? 'Paste image URL' : 'Paste video URL'}
+              value={mediaUrl}
+              onChange={(e) => setMediaUrl(e.target.value)}
+              className="border-border"
+            />
+          </div>
+        )}
+
+        {postType === 'poll' && (
+          <div>
+            <h2 className="text-sm font-semibold text-foreground mb-2">Poll options</h2>
+            <Input
+              placeholder="Option 1, Option 2, Option 3"
+              value={pollOptionsInput}
+              onChange={(e) => setPollOptionsInput(e.target.value)}
+              className="border-border"
+            />
           </div>
         )}
 
