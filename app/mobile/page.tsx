@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { mockPosts, mockUsers } from '@/lib/constants/mock-data';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { Search, Plus, X } from 'lucide-react';
+import { ThemeToggle } from '@/components/common/ThemeToggle';
 
 export default function MobileHome() {
   const [localPosts] = useLocalStorage<any[]>('mc_local_posts', []);
@@ -62,7 +63,7 @@ export default function MobileHome() {
   };
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,#ecfeff_0%,#f8fafc_40%,#ffffff_100%)] pb-24">
+    <div className="min-h-screen bg-background pb-20">
       <div className="pt-4">
         <div className="flex items-center justify-between px-4">
           <div>
@@ -70,6 +71,7 @@ export default function MobileHome() {
             <h1 className="text-2xl font-semibold text-foreground">Feed</h1>
           </div>
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             <Button
               variant="ghost"
               size="sm"

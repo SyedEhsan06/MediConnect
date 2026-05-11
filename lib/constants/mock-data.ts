@@ -188,7 +188,7 @@ export const mockPosts = [
     title: 'Anatomy Quick Lesson: Coronary Circulation',
     content: 'A detailed video explanation of coronary artery anatomy and blood supply to different parts of the heart. Essential for cardiology understanding!',
     videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-    videoThumbnail: 'https://images.unsplash.com/photo-1584308666744-24d5f400f6f6?w=500&h=300',
+    videoThumbnail: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80',
     duration: '12:45',
     timestamp: '6 hours ago',
     likes: 890,
