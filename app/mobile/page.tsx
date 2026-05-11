@@ -63,7 +63,7 @@ export default function MobileHome() {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="min-h-screen bg-background pb-32">
       <div className="pt-4">
         <div className="flex items-center justify-between px-4">
           <div>
@@ -98,7 +98,7 @@ export default function MobileHome() {
       <div className="fixed bottom-24 right-4 z-20">
         <Button
           size="lg"
-          className="rounded-full w-14 h-14 shadow-lg hover:shadow-xl"
+          className="rounded-full w-14 h-14 shadow-lg hover:shadow-xl bg-linear-to-tr from-primary to-accent text-primary-foreground hover:scale-105 transition-transform"
           asChild
         >
           <Link href="/mobile/create-post">

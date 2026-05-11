@@ -37,78 +37,85 @@ export default function CourseDetailPage({ params }: { params: Promise<{ courseI
   return (
     <div className="min-h-screen bg-background pb-24">
       {/* Header */}
-      <div className="bg-gradient-to-b from-accent to-accent/80 text-primary-foreground pt-4 pb-6 px-4">
-        <div className="max-w-2xl mx-auto flex items-center justify-between mb-4">
-          <Button variant="ghost" size="sm" className="text-primary-foreground hover:bg-white/20" asChild>
+      <div className="bg-primary/95 text-primary-foreground pt-10 pb-8 px-4 relative overflow-hidden backdrop-blur-md border-b border-primary/20">
+        <div className="absolute inset-0 bg-linear-to-tr from-primary via-primary/80 to-accent/80 opacity-50"></div>
+        <div className="max-w-2xl mx-auto flex items-center justify-between mb-8 relative z-10">
+          <Button variant="ghost" size="sm" className="text-primary-foreground hover:bg-white/20 h-10 w-10 p-0 rounded-full" asChild>
             <Link href="/mobile/courses">
               <ArrowLeft className="w-5 h-5" />
             </Link>
           </Button>
-          <span className="text-sm font-semibold">Course Details</span>
+          <span className="text-sm font-semibold tracking-wide uppercase">Course Overview</span>
           <div className="w-10" />
         </div>
 
-        <div className="max-w-2xl mx-auto">
-          <div className="flex gap-3 mb-4">
-            <div className="text-4xl">{course.thumbnail}</div>
-            <div className="flex-1">
-              <h1 className="text-xl font-bold mb-1">{course.title}</h1>
-              <p className="text-sm opacity-90">{course.instructor}</p>
+        <div className="max-w-2xl mx-auto relative z-10">
+          <div className="flex gap-4 mb-8 items-start">
+            <div className="text-5xl bg-white/10 p-3 rounded-2xl shadow-inner border border-white/20 backdrop-blur-sm">{course.thumbnail}</div>
+            <div className="flex-1 mt-1">
+              <h1 className="text-2xl font-bold mb-2 leading-tight text-white drop-shadow-sm">{course.title}</h1>
+              <p className="text-sm text-primary-foreground/90 font-medium flex items-center gap-1.5 opacity-95">
+                <span className="h-5 w-5 rounded-full bg-white/20 flex items-center justify-center text-[10px]">👨‍⚕️</span>  
+                {course.instructor}
+              </p>
             </div>
           </div>
 
           {/* Quick Stats */}
-          <div className="grid grid-cols-3 gap-2 text-sm">
-            <div className="bg-white/20 rounded-lg p-2 backdrop-blur-sm">
-              <div className="flex items-center gap-1 mb-0.5">
-                <Star className="w-3 h-3 fill-current" />
+          <div className="grid grid-cols-3 gap-3 text-sm">
+            <div className="bg-white/10 border border-white/20 rounded-xl p-3 backdrop-blur-md shadow-sm">
+              <div className="flex items-center gap-1.5 mb-1 text-white">
+                <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
                 <span className="font-bold">{course.rating}</span>
               </div>
-              <p className="text-xs opacity-80">{course.reviews} reviews</p>
+              <p className="text-xs text-primary-foreground/80">{course.reviews} reviews</p>
             </div>
-            <div className="bg-white/20 rounded-lg p-2 backdrop-blur-sm">
-              <div className="flex items-center gap-1 mb-0.5">
-                <Users className="w-3 h-3" />
+            <div className="bg-white/10 border border-white/20 rounded-xl p-3 backdrop-blur-md shadow-sm">
+              <div className="flex items-center gap-1.5 mb-1 text-white">
+                <Users className="w-4 h-4" />
                 <span className="font-bold">{course.students}+</span>
               </div>
-              <p className="text-xs opacity-80">Students</p>
+              <p className="text-xs text-primary-foreground/80">Enrolled</p>
             </div>
-            <div className="bg-white/20 rounded-lg p-2 backdrop-blur-sm">
-              <div className="flex items-center gap-1 mb-0.5">
-                <BookOpen className="w-3 h-3" />
+            <div className="bg-white/10 border border-white/20 rounded-xl p-3 backdrop-blur-md shadow-sm">
+              <div className="flex items-center gap-1.5 mb-1 text-white">
+                <BookOpen className="w-4 h-4" />
                 <span className="font-bold">{course.lessons}</span>
               </div>
-              <p className="text-xs opacity-80">Lessons</p>
+              <p className="text-xs text-primary-foreground/80">Lessons</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="px-4 py-6 max-w-2xl mx-auto space-y-6">
+      <div className="px-4 py-8 max-w-2xl mx-auto space-y-6">
         {/* Description */}
-        <div className="bg-card border border-border rounded-xl p-4">
-          <h2 className="font-semibold text-foreground mb-2">About this course</h2>
-          <p className="text-sm text-muted-foreground leading-relaxed">{course.description}</p>
+        <div className="bg-card border border-border shadow-xs rounded-2xl p-5">
+          <h2 className="text-base font-bold text-foreground mb-3 flex items-center gap-2">
+            <span className="w-1 h-5 bg-primary rounded-full"></span>
+            About this course
+          </h2>
+          <p className="text-[15px] text-muted-foreground leading-relaxed">{course.description}</p>
         </div>
 
         {/* Course Info */}
         <div className="grid grid-cols-2 gap-3">
-          <div className="bg-card border border-border rounded-lg p-3">
-            <p className="text-xs text-muted-foreground mb-1">Duration</p>
-            <p className="font-semibold text-foreground">{course.duration}</p>
+          <div className="bg-muted/30 border border-border rounded-xl p-4 flex flex-col items-center justify-center text-center">
+            <p className="text-[11px] uppercase tracking-wider text-muted-foreground mb-1 font-medium">Duration</p>
+            <p className="font-bold text-foreground text-lg">{course.duration}</p>
           </div>
-          <div className="bg-card border border-border rounded-lg p-3">
-            <p className="text-xs text-muted-foreground mb-1">Level</p>
-            <p className="font-semibold text-foreground">{course.level}</p>
+          <div className="bg-muted/30 border border-border rounded-xl p-4 flex flex-col items-center justify-center text-center">
+            <p className="text-[11px] uppercase tracking-wider text-muted-foreground mb-1 font-medium">Level</p>
+            <p className="font-bold text-foreground text-lg">{course.level}</p>
           </div>
-          <div className="bg-card border border-border rounded-lg p-3">
-            <p className="text-xs text-muted-foreground mb-1">Category</p>
-            <p className="font-semibold text-foreground">{course.category}</p>
+          <div className="bg-muted/30 border border-border rounded-xl p-4 flex flex-col items-center justify-center text-center">
+            <p className="text-[11px] uppercase tracking-wider text-muted-foreground mb-1 font-medium">Category</p>
+            <p className="font-bold text-foreground text-lg">{course.category}</p>
           </div>
-          <div className="bg-card border border-border rounded-lg p-3">
-            <p className="text-xs text-muted-foreground mb-1">Price</p>
-            <p className="font-semibold text-accent">
+          <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 flex flex-col items-center justify-center text-center">
+            <p className="text-[11px] uppercase tracking-wider text-primary mb-1 font-medium">Price</p>
+            <p className="font-bold text-primary text-xl">
               {course.isPaid ? `₹${course.price}` : 'Free'}
             </p>
           </div>
@@ -116,10 +123,13 @@ export default function CourseDetailPage({ params }: { params: Promise<{ courseI
 
         {/* Curriculum */}
         {course.modules && course.modules.length > 0 && (
-          <div className="bg-card border border-border rounded-xl overflow-hidden">
-            <div className="p-4 border-b border-border">
-              <h2 className="font-semibold text-foreground">Curriculum</h2>
-              <p className="text-xs text-muted-foreground mt-1">{course.modules.length} modules</p>
+          <div className="bg-card border border-border shadow-xs rounded-2xl overflow-hidden mt-6">
+            <div className="p-5 border-b border-border flex items-center justify-between bg-muted/20">
+              <h2 className="text-base font-bold text-foreground flex items-center gap-2">
+                <span className="w-1 h-5 bg-accent rounded-full"></span>
+                Curriculum
+              </h2>
+              <Badge variant="secondary" className="text-xs bg-accent/10 text-accent hover:bg-accent/20 border-0">{course.modules.length} modules</Badge>
             </div>
 
             <div className="divide-y divide-border">
